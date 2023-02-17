@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"time"
 	"net/http"
+	// "log"
 )
 
 type AcountServiceApi struct {
@@ -18,8 +19,8 @@ func (acctapi *AcountServiceApi) Router(router *gin.Engine){
 	accountService.CreateCustomers();
 }
 
-func (acctapi *AcountServiceApi) GetCustomers(router *gin.Engine){
-	route.GET("/customers/all", func(c *gin.Context) {
+func (acctapi *AcountServiceApi) GetCustomers(router *gin.RouterGroup){
+	router.GET("/customers/all", func(c *gin.Context) {
 
 		data, err := accountService.GetCustomers();
 		if err != nil {
@@ -41,10 +42,10 @@ func (acctapi *AcountServiceApi) GetCustomers(router *gin.Engine){
 	});
 }
 
-func (acctapi *AcountServiceApi) CreateAccount(router *gin.Engine){
-	route.POST("/create", func(c *gin.Context) {
+func (acctapi *AcountServiceApi) CreateAccount(router *gin.RouterGroup){
+	router.POST("/create", func(c *gin.Context) {
 
-		data, err := accountService.CreateAccount(c);
+		err := accountService.CreateAccount(c);
 		if err != nil {
 			c.JSON(500, gin.H{
 				"message": err.Error(),
@@ -57,7 +58,7 @@ func (acctapi *AcountServiceApi) CreateAccount(router *gin.Engine){
 
 		c.JSON(200, gin.H{
 			"message": "",
-			"data": data,
+			"data": "",
 			"status": http.StatusOK,
 		});
 		

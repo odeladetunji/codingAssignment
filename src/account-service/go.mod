@@ -6,6 +6,7 @@ require (
 	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6
 	github.com/gin-gonic/gin v1.8.2
 	services.com/dto v0.0.0-00010101000000-000000000000
+	services.com/entity v0.0.0-00010101000000-000000000000
 	services.com/repository v0.0.0-00010101000000-000000000000
 )
 
@@ -32,7 +33,6 @@ require (
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	services.com/deschema v0.0.0-00010101000000-000000000000 // indirect
-	services.com/entity v0.0.0-00010101000000-000000000000 // indirect
 )
 
 replace services.com/repository => ../repository

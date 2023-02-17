@@ -6,6 +6,9 @@ import (
 	"time"
 	random "math/rand"
 	Dto "services.com/dto"
+	Entity "services.com/entity"
+	"errors"
+	// "fmt"
 )
 
 type AccountService struct {
@@ -13,13 +16,13 @@ type AccountService struct {
 }
 
 var accountService AccountService;
-var customerRepo Repsitory.CustomerRepository = &Repository.CustomerRepo{};
+var customerRepo Repository.CustomerRepository = &Repository.CustomerRepo{};
 var accountRepo Repository.AccountRepository = &Repository.AccountRepo{};
 
 func (acct *AccountService) GetCustomers() ([]Entity.Customers, error) {
-    customerList, err := customerRepo.CreateCustomer(customer);
+    customerList, err := customerRepo.GetAllCustomers();
     if err != nil {
-		return []Entity.Customers, errors.New(err.Error());
+		return []Entity.Customers{}, errors.New(err.Error());
 	}
 
 	return customerList, nil;
@@ -28,7 +31,7 @@ func (acct *AccountService) GetCustomers() ([]Entity.Customers, error) {
 func (acct *AccountService) CreateAccount(c *gin.Context) error {
 
 	type Payload struct {
-		CustomerId string `json:"customerId"`
+		CustomerId int `json:"customerId"`
 		InitialCredit int `json:"initialCredit"`
 	}
 
@@ -37,13 +40,13 @@ func (acct *AccountService) CreateAccount(c *gin.Context) error {
 		return errors.New(err.Error());
 	}
 
-	var account Entity.Accounts;
+	var account Entity.Account;
 	account.CustomerId = payload.CustomerId;
 	account.Type = "CURRENT ACCOUNT";
-	account.CreatedDate = fmt.Sprint(time.Now());
+	account.CreatedDate = time.Now().String();
 	account.CreatedBy = "Admin";
 	account.LastActivityBy = "Admin";
-	account.LastActivityDate = fmt.Sprint(time.Now());
+	account.LastActivityDate = time.Now().String();
 
 	if payload.InitialCredit != 0 {
 		account.Balance = payload.InitialCredit;
@@ -81,10 +84,10 @@ func (acct *AccountService) CreateCustomers(){
 	customer.Id = 1;
 	customer.Name = "Sam";
 	customer.Surname = "Grey";
-	customer.CustomerId = random.Int31();
-	customer.CreatedDate = fmt.Sprint(time.Now());
+	customer.CustomerId = int(random.Int31());
+	customer.CreatedDate = time.Now().String();
 	customer.CreatedBy = "Admin";
-	customer.LastActivityDate = fmt.Sprint(time.Now());
+	customer.LastActivityDate = time.Now().String();
 	customer.LastActivityBy = "Admin";
 
     customerRepo.CreateCustomer(customer);
@@ -92,10 +95,10 @@ func (acct *AccountService) CreateCustomers(){
 	customer.Id = 2;
 	customer.Name = "Victor";
 	customer.Surname = "Bay";
-	customer.CustomerId = random.Int31();
-	customer.CreatedDate = fmt.Sprint(time.Now());
+	customer.CustomerId = int(random.Int31());
+	customer.CreatedDate = time.Now().String();
 	customer.CreatedBy = "Admin";
-	customer.LastActivityDate = fmt.Sprint(time.Now());
+	customer.LastActivityDate = time.Now().String();
 	customer.LastActivityBy = "Admin";
 
 	customerRepo.CreateCustomer(customer);
@@ -103,10 +106,10 @@ func (acct *AccountService) CreateCustomers(){
 	customer.Id = 3;
 	customer.Name = "Ford";
 	customer.Surname = "Henry";
-	customer.CustomerId = random.Int31();
-	customer.CreatedDate = fmt.Sprint(time.Now());
+	customer.CustomerId = int(random.Int31());
+	customer.CreatedDate = time.Now().String();
 	customer.CreatedBy = "Admin";
-	customer.LastActivityDate = fmt.Sprint(time.Now());
+	customer.LastActivityDate = time.Now().String();
 	customer.LastActivityBy = "Admin";
 
 	customerRepo.CreateCustomer(customer);
