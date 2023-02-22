@@ -34,7 +34,7 @@ func (acctapi *AcountServiceApi) GetCustomers(router *gin.RouterGroup){
 		}
 
 		c.JSON(200, gin.H{
-			"message": "",
+			"message": "Customer List",
 			"data": data,
 			"status": http.StatusOK,
 		});
@@ -57,7 +57,7 @@ func (acctapi *AcountServiceApi) CreateAccount(router *gin.RouterGroup){
 		}
 
 		c.JSON(200, gin.H{
-			"message": "",
+			"message": "Account Created Successfully",
 			"data": "",
 			"status": http.StatusOK,
 		});

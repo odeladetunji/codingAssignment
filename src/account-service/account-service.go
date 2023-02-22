@@ -33,7 +33,7 @@ func (acct *AccountService) CreateAccount(c *gin.Context) error {
 
 	type Payload struct {
 		CustomerId int `json:"customerId"`
-		InitialCredit int `json:"initialCredit"`
+		InitialCredit float64 `json:"initialCredit"`
 	}
 
 	var payload Payload;

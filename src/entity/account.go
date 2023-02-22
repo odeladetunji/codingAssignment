@@ -5,7 +5,7 @@ package entity
 type Account struct {
 	Id int `json:"id"`
 	Type string `json:"type"`
-	Balance int `json:"balance"`
+	Balance float64 `json:"balance"`
 	CustomerId int `json:"customerId"`
 	CreatedDate string `json:"createdDate"`
 	CreatedBy string `json:"createdBy"`
