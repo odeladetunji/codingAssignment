@@ -1,4 +1,7 @@
 # codingAssignment
+
+### Clone the Project and move to the main branch.
+
 The root directory contain a docker compose file  (docker-compose-yml)
 Make sure to have docker installed in your machine.
 The docker compose file contains a PostreSQL docker image.
