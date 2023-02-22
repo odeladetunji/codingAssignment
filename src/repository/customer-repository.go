@@ -5,13 +5,13 @@ import (
 	Entity "services.com/entity"
 	Migration "services.com/migration"
 	"errors"
-	"time"
+	// "time"
 )
 
 type CustomerRepository interface {
-	CreateCustomer(customer Entity.Customers)
-	GetAllCustomers() ([]Entity.Customers, error)
-	CreateCustomerList(customerList []Entity.Customers)
+	CreateCustomer(customer Entity.Customers) error
+	GetAllCustomers() ([]Entity.Customers, error) 
+	CreateCustomerList(customerList []Entity.Customers) error
 	DBconnection() (*gorm.DB)
 }
 
@@ -26,24 +26,24 @@ func (acct *CustomerRepo) DBconnection() (*gorm.DB) {
 	return migration.ConnectToDb();
 }
 
-func (acct *CustomerRepo) CreateCustomer(customer Entity.Customers) {
+func (acct *CustomerRepo) CreateCustomer(customer Entity.Customers) error {
 	var database *gorm.DB = dbs.ConnectToDb();
 	dbError := database.Create(&customer).Error;
 	if dbError != nil {
-		return Entity.Customers{}, errors.New(dbError.Error());
+		return errors.New(dbError.Error());
 	}
 
-	return customer, nil;
+	return nil;
 }
 
-func (acct *CustomerRepo) CreateCustomerList(customerList []Entity.Customers) {
+func (acct *CustomerRepo) CreateCustomerList(customerList []Entity.Customers) error {
 	var database *gorm.DB = dbs.ConnectToDb();
 	dbError := database.Create(&customerList).Error;
 	if dbError != nil {
-		return []Entity.Customers{}, errors.New(dbError.Error());
+		return errors.New(dbError.Error());
 	}
 
-	return customerList, nil;
+	return nil;
 }
 
 func (acct *CustomerRepo) GetAllCustomers() ([]Entity.Customers, error) {

@@ -5,11 +5,11 @@ import (
 	Entity "services.com/entity"
 	Migration "services.com/migration"
 	"errors"
-	"time"
+	// "time"
 )
 
 type AccountRepository interface {
-	CreateAccount(Entity.Account) (error) 
+	CreateAccount(account Entity.Account, tx *gorm.DB) (error) 
 	DBconnection() (*gorm.DB)
 }
 
@@ -25,10 +25,10 @@ func (acctR *AccountRepo) DBconnection() (*gorm.DB) {
 func (acctR *AccountRepo) CreateAccount(account Entity.Account, tx *gorm.DB) (error) {
 	dbError := tx.Create(&account).Error;
 	if dbError != nil {
-		return Entity.Account{}, errors.New(dbError.Error());
+		return errors.New(dbError.Error());
 	}
 
-	return account, nil;
+	return nil;
 }
 
 

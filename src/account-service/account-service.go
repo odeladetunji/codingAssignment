@@ -1,6 +1,7 @@
 package main
 
 import (
+	"gorm.io/gorm"
 	"github.com/gin-gonic/gin"
 	Repository "services.com/repository"
 	"time"
@@ -49,11 +50,11 @@ func (acct *AccountService) CreateAccount(c *gin.Context) error {
 	account.LastActivityDate = time.Now().String();
 
 	dbConnection := accountRepo.DBconnection();
-	tx := dbConnection.Begin();
+	var tx *gorm.DB = dbConnection.Begin();
 
 	if payload.InitialCredit != 0 {
 		account.Balance = payload.InitialCredit;
-		errAct := accountRepo.CreateAccount(account, &tx);
+		errAct := accountRepo.CreateAccount(account, tx);
 		if errAct != nil {
 			return errors.New(errAct.Error());
 		}
@@ -75,10 +76,13 @@ func (acct *AccountService) CreateAccount(c *gin.Context) error {
 	}
 
 	if payload.InitialCredit == 0 {
-		errAct := accountRepo.CreateAccount(account);
+		errAct := accountRepo.CreateAccount(account, tx);
 		if errAct != nil {
+			tx.Rollback();
 			return errors.New(errAct.Error());
 		}
+
+		tx.Commit();
 	}
 
 	return nil;
@@ -86,7 +90,7 @@ func (acct *AccountService) CreateAccount(c *gin.Context) error {
 
 func (acct *AccountService) CreateCustomers(){
 	
-	var customerList []Entity.CustomerList;
+	var customerList []Entity.Customers;
 	var customer Entity.Customers;
 
 	//FirstCustomer
@@ -111,7 +115,7 @@ func (acct *AccountService) CreateCustomers(){
 	customer.CustomerId = int(random.Int31());
 	customerList = append(customerList, customer);
 
-	customers, err := customerRepo.CreateCustomerList(customerList);
+	err := customerRepo.CreateCustomerList(customerList);
 	if err != nil {
 		panic(err.Error());
 	}

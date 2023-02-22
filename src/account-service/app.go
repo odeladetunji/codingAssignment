@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	Endless "github.com/fvbock/endless"
 	"log"
+	Migration "services.com/migration"
 )
 
 func main(){
@@ -12,7 +13,15 @@ func main(){
 	// router.Use(auth.CORSMiddleware());
 	router.MaxMultipartMemory = 100 << 20  // 50 MiB
 
+	migrateDatabase :=  func(){
+		var migration Migration.Migration = &Migration.MigrationService{}
+		migration.MigrateTables();
+	}
+
+	migrateDatabase();
+
 	setRoutes := func(){
+		var acountServiceApi AcountServiceApi;
 		acountServiceApi.Router(router);
 	}
 

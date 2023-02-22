@@ -5,7 +5,7 @@ import (
 	Entity "services.com/entity"
 	Migration "services.com/migration"
 	"errors"
-	"time"
+	// "time"
 )
 
 var dbsi Migration.Migration = &Migration.MigrationService{}
@@ -29,15 +29,15 @@ func (trans *CustomerTransactionsRepo) CreateCustomerTransaction(customerTransac
 	var database *gorm.DB = dbsi.ConnectToDb();
 	dbError := database.Create(&customerTransaction).Error;
 	if dbError != nil {
-		return Entity.CustomerTransactions{}, errors.New(dbError.Error());
+		return errors.New(dbError.Error());
 	}
 
-	return customerTransaction, nil;
+	return nil;
 }
 
 func (trans *CustomerTransactionsRepo) GetAllCustomerTransactions(customerId int) ([]Entity.CustomerTransactions, error) {
 	var database *gorm.DB = dbsi.ConnectToDb();
-	var customerTransactionList []Entity.Customers;
+	var customerTransactionList []Entity.CustomerTransactions;
 	dbError := database.Model(&Entity.CustomerTransactions{}).Where(&Entity.CustomerTransactions{CustomerId: customerId}).Find(&customerTransactionList).Error;
 	if dbError != nil {
 		return []Entity.CustomerTransactions{}, errors.New(dbError.Error());
