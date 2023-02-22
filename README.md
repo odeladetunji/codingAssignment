@@ -22,6 +22,8 @@ on another terminal move to the src/transaction-service directory and run the co
 
 This should start the Transaction Service.
 
+Upon starting the services three customers will be initialized in the DB so as to have some customers in the system as stated by assignment
+
 The code was written in a way to role back transactions upon failure during account creation.
 
 For Api Testing follow the Url Below (Postman Collection)
