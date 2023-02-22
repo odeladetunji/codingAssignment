@@ -2,9 +2,11 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	Repository "services/repository"
+	Entity "services.com/entity"
+	Repository "services.com/repository"
 	"time"
-	random "math/rand"
+	"errors"
+	"strconv"
 )
 
 type TransactionService struct {
@@ -12,14 +14,13 @@ type TransactionService struct {
 }
 
 var transactionService TransactionService;
-var transactionRepo CustomerTransactionsRepository.CustomerTransactionsRepo = 
-&CustomerTransactionsRepository.CustomerTransactionsRepo{};
+var transactionRepo Repository.CustomerTransactionsRepository = &Repository.CustomerTransactionsRepo{};
 
 func (transa *TransactionService) CreateTransaction(c *gin.Context) error {
 
 	type Payload struct {
 		CustomerId int `json:"customerId"`
-		InitialCredit int `json:"initialCredit"`
+		InitialCredit float64 `json:"initialCredit"`
 	}
 
 	var payload Payload;
@@ -32,10 +33,10 @@ func (transa *TransactionService) CreateTransaction(c *gin.Context) error {
 	trans.Amount = payload.InitialCredit;
 	trans.Type = "CREDIT";
     trans.CustomerId = payload.CustomerId;
-	trans.CreatedDate = fmt.Sprint(time.Now());
+	trans.CreatedDate = time.Now();
 	trans.CreatedBy = "Admin";
 	trans.LastActivityBy = "Admin";
-	trans.LastActivityDate = fmt.Sprint(time.Now());
+	trans.LastActivityDate = time.Now();
 
     errTrn := transactionRepo.CreateCustomerTransaction(trans);
 	if errTrn != nil {
@@ -47,18 +48,18 @@ func (transa *TransactionService) CreateTransaction(c *gin.Context) error {
 }
 
 func (transa *TransactionService) GetAllCustomerTransactions(c *gin.Context) ([]Entity.CustomerTransactions, error) {
-	
+
 	customerId, err := strconv.Atoi(c.Query("customerId"));
 	if err != nil {
-		return 0, errors.New(err.Error());
+		return []Entity.CustomerTransactions{}, errors.New(err.Error());
 	}
 
 	transactionList, errT := transactionRepo.GetAllCustomerTransactions(customerId);
 	if errT != nil {
-		return []Entity.CustomerTransactions, errors.New(errT.Error());
+		return []Entity.CustomerTransactions{}, errors.New(errT.Error());
 	}
 
-	return transactionList;
+	return transactionList, nil;
 
 }
 

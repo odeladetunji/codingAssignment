@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"time"
 	"net/http"
+	// "fmt"
 )
 
 type TranserviceApi struct {
@@ -17,8 +18,8 @@ func (transapi *TranserviceApi) Router(router *gin.Engine){
 	transerviceApi.GetAllCustomerTransactions(route);
 }
 
-func (transapi *TranserviceApi) CreateTransaction(router *gin.Engine){
-	route.POST("/createTransaction", func(c *gin.Context) {
+func (transapi *TranserviceApi) CreateTransaction(router *gin.RouterGroup){
+	router.POST("/createTransaction", func(c *gin.Context) {
 
 		err := transactionService.CreateTransaction(c);
 		if err != nil {
@@ -40,8 +41,8 @@ func (transapi *TranserviceApi) CreateTransaction(router *gin.Engine){
 	});
 }
 
-func (transapi *TranserviceApi) GetAllCustomerTransactions(router *gin.Engine){
-	route.GET("/transactions", func(c *gin.Context) {
+func (transapi *TranserviceApi) GetAllCustomerTransactions(router *gin.RouterGroup){
+	router.GET("/transactions", func(c *gin.Context) {
 
 		transaction, err := transactionService.GetAllCustomerTransactions(c);
 		if err != nil {

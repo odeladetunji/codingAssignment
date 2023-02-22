@@ -3,16 +3,17 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	Endless "github.com/fvbock/endless"
+	"log"
 )
 
 func main(){
 
 	router := gin.Default();
-	router.Use(auth.CORSMiddleware());
 	router.MaxMultipartMemory = 100 << 20  // 50 MiB
 
 	setRoutes := func(){
-		transerviceApi..Router(router);
+	    var transerviceApi TranserviceApi;
+		transerviceApi.Router(router);
 	}
 
     setRoutes();

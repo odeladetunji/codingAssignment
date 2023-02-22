@@ -11,7 +11,7 @@ import (
 var dbsi Migration.Migration = &Migration.MigrationService{}
 
 type CustomerTransactionsRepository interface {
-	GetAllCustomerTransactions(customerId int) (error)
+	GetAllCustomerTransactions(customerId int) ([]Entity.CustomerTransactions, error)
 	CreateCustomerTransaction(customerTransaction Entity.CustomerTransactions) (error)
 	DBconnection() (*gorm.DB)
 }
