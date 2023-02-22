@@ -1,0 +1,14 @@
+
+version: '1'
+
+networks:
+  app-tier:
+    driver: bridge
+services:
+  postgresql:
+    image: postgres
+    restart: always
+    networks:
+      - app-tier
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust

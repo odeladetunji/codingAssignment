@@ -48,9 +48,12 @@ func (acct *AccountService) CreateAccount(c *gin.Context) error {
 	account.LastActivityBy = "Admin";
 	account.LastActivityDate = time.Now().String();
 
+	dbConnection := accountRepo.DBconnection();
+	tx := dbConnection.Begin();
+
 	if payload.InitialCredit != 0 {
 		account.Balance = payload.InitialCredit;
-		errAct := accountRepo.CreateAccount(account);
+		errAct := accountRepo.CreateAccount(account, &tx);
 		if errAct != nil {
 			return errors.New(errAct.Error());
 		}
@@ -63,8 +66,11 @@ func (acct *AccountService) CreateAccount(c *gin.Context) error {
 
 			errMic := microservice.CreateTransaction(transPayload);
 			if errMic != nil {
+				tx.Rollback();
 				return errors.New("Error Creating Transactions")
 			}
+
+			tx.Commit();
 		}
 	}
 
@@ -80,39 +86,35 @@ func (acct *AccountService) CreateAccount(c *gin.Context) error {
 
 func (acct *AccountService) CreateCustomers(){
 	
+	var customerList []Entity.CustomerList;
 	var customer Entity.Customers;
-	customer.Id = 1;
+
+	//FirstCustomer
 	customer.Name = "Sam";
 	customer.Surname = "Grey";
 	customer.CustomerId = int(random.Int31());
 	customer.CreatedDate = time.Now().String();
 	customer.CreatedBy = "Admin";
-	customer.LastActivityDate = time.Now().String();
 	customer.LastActivityBy = "Admin";
+	customer.LastActivityDate = time.Now().String();
+    customerList = append(customerList, customer);
 
-    customerRepo.CreateCustomer(customer);
-
-	customer.Id = 2;
+	//Second Customer
 	customer.Name = "Victor";
 	customer.Surname = "Bay";
 	customer.CustomerId = int(random.Int31());
-	customer.CreatedDate = time.Now().String();
-	customer.CreatedBy = "Admin";
-	customer.LastActivityDate = time.Now().String();
-	customer.LastActivityBy = "Admin";
+	customerList = append(customerList, customer);
 
-	customerRepo.CreateCustomer(customer);
-
-	customer.Id = 3;
+	//Third Customer
 	customer.Name = "Ford";
 	customer.Surname = "Henry";
 	customer.CustomerId = int(random.Int31());
-	customer.CreatedDate = time.Now().String();
-	customer.CreatedBy = "Admin";
-	customer.LastActivityDate = time.Now().String();
-	customer.LastActivityBy = "Admin";
+	customerList = append(customerList, customer);
 
-	customerRepo.CreateCustomer(customer);
+	customers, err := customerRepo.CreateCustomerList(customerList);
+	if err != nil {
+		panic(err.Error());
+	}
 
 }
 
