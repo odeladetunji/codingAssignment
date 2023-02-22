@@ -7,7 +7,7 @@ type TransPayload struct {
 }
 
 type CustomerTransactionDetails struct {
-	Customer Entity.Customers `json:"customer"`
+	Account Entity.Account `json:"customer"`
 	Transactions []Entity.CustomerTransactions `json:"transactions"`
 }
 

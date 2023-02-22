@@ -9,7 +9,8 @@ import (
 	Dto "services.com/dto"
 	Entity "services.com/entity"
 	"errors"
-	// "fmt"
+	"fmt"
+	"strings"
 )
 
 type AccountService struct {
@@ -45,6 +46,15 @@ func (acct *AccountService) CreateAccount(c *gin.Context) error {
 		return errors.New("CustomerId is required")
 	}
 
+	customer, errCusI := customerRepo.GetCustomerByCustomerId(payload.CustomerId);
+	if errCusI != nil {
+		return errors.New(errCusI.Error());
+	}
+
+	if customer.Id == 0 {
+		return errors.New(strings.Join([]string{"This customerId ", fmt.Sprint(payload.CustomerId), " does not exits"}, ""));
+	}
+
 	acctn, errActn := accountRepo.GetAccountByCustomerId(payload.CustomerId);
 	if errActn != nil {
 		return errors.New(errActn.Error())
@@ -56,6 +66,8 @@ func (acct *AccountService) CreateAccount(c *gin.Context) error {
 
 	var account Entity.Account;
 	account.CustomerId = payload.CustomerId;
+	account.Name = customer.Name;
+	account.Surname = customer.Surname;
 	account.Type = "CURRENT ACCOUNT";
 	account.CreatedDate = time.Now().String();
 	account.CreatedBy = "Admin";

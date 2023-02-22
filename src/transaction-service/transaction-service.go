@@ -17,6 +17,7 @@ type TransactionService struct {
 var transactionService TransactionService;
 var transactionRepo Repository.CustomerTransactionsRepository = &Repository.CustomerTransactionsRepo{};
 var customerRepo Repository.CustomerRepository = &Repository.CustomerRepo{};
+var accountRepo Repository.AccountRepository = &Repository.AccountRepo{};
 
 func (transa *TransactionService) CreateTransaction(c *gin.Context) error {
 
@@ -45,7 +46,7 @@ func (transa *TransactionService) CreateTransaction(c *gin.Context) error {
 	}
 
 	return nil;
-    
+
 }
 
 func (transa *TransactionService) GetAllCustomerTransactions(c *gin.Context) (Dto.CustomerTransactionDetails, error) {
@@ -59,9 +60,9 @@ func (transa *TransactionService) GetAllCustomerTransactions(c *gin.Context) (Dt
 		return Dto.CustomerTransactionDetails{}, errors.New(err.Error());
 	}
 
-	customer, errCus := customerRepo.GetCustomerByCustomerId(customerId);
-	if errCus != nil {
-		return Dto.CustomerTransactionDetails{}, errors.New(errCus.Error());
+	account, errActn := accountRepo.GetAccountByCustomerId(customerId);
+	if errActn != nil {
+		return Dto.CustomerTransactionDetails{}, errors.New(errActn.Error())
 	}
 
 	transactionList, errT := transactionRepo.GetAllCustomerTransactions(customerId);
@@ -70,7 +71,7 @@ func (transa *TransactionService) GetAllCustomerTransactions(c *gin.Context) (Dt
 	}
 
 	var customerTransactionDetails Dto.CustomerTransactionDetails;
-	customerTransactionDetails.Customer = customer;
+	customerTransactionDetails.Account = account;
 	customerTransactionDetails.Transactions = transactionList;
 	return customerTransactionDetails, nil;
 
