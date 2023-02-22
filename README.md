@@ -22,7 +22,7 @@ on another terminal move to the src/transaction-service directory and run the co
 
 This should start the Transaction Service.
 
-The code was written a way to role back transactions upon failure during account creation.
+The code was written in a way to role back transactions upon failure during account creation.
 
 For Api Testing follow the Url Below (Postman Collection)
 https://documenter.getpostman.com/view/2630186/2s93CLrtX8
