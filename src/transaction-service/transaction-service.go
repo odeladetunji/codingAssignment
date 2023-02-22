@@ -5,6 +5,7 @@ import (
 	Entity "services.com/entity"
 	Repository "services.com/repository"
 	"time"
+	Dto "services.com/dto"
 	"errors"
 	"strconv"
 )
@@ -15,6 +16,7 @@ type TransactionService struct {
 
 var transactionService TransactionService;
 var transactionRepo Repository.CustomerTransactionsRepository = &Repository.CustomerTransactionsRepo{};
+var customerRepo Repository.CustomerRepository = &Repository.CustomerRepo{};
 
 func (transa *TransactionService) CreateTransaction(c *gin.Context) error {
 
@@ -29,7 +31,6 @@ func (transa *TransactionService) CreateTransaction(c *gin.Context) error {
 	}
 
 	var trans Entity.CustomerTransactions;
-
 	trans.Amount = payload.InitialCredit;
 	trans.Type = "CREDIT";
     trans.CustomerId = payload.CustomerId;
@@ -47,19 +48,31 @@ func (transa *TransactionService) CreateTransaction(c *gin.Context) error {
     
 }
 
-func (transa *TransactionService) GetAllCustomerTransactions(c *gin.Context) ([]Entity.CustomerTransactions, error) {
+func (transa *TransactionService) GetAllCustomerTransactions(c *gin.Context) (Dto.CustomerTransactionDetails, error) {
+
+	if len(c.Query("customerId")) == 0 {
+		return Dto.CustomerTransactionDetails{}, errors.New("customerId is required");
+	}
 
 	customerId, err := strconv.Atoi(c.Query("customerId"));
 	if err != nil {
-		return []Entity.CustomerTransactions{}, errors.New(err.Error());
+		return Dto.CustomerTransactionDetails{}, errors.New(err.Error());
+	}
+
+	customer, errCus := customerRepo.GetCustomerByCustomerId(customerId);
+	if errCus != nil {
+		return Dto.CustomerTransactionDetails{}, errors.New(errCus.Error());
 	}
 
 	transactionList, errT := transactionRepo.GetAllCustomerTransactions(customerId);
 	if errT != nil {
-		return []Entity.CustomerTransactions{}, errors.New(errT.Error());
+		return Dto.CustomerTransactionDetails{}, errors.New(errT.Error());
 	}
 
-	return transactionList, nil;
+	var customerTransactionDetails Dto.CustomerTransactionDetails;
+	customerTransactionDetails.Customer = customer;
+	customerTransactionDetails.Transactions = transactionList;
+	return customerTransactionDetails, nil;
 
 }
 

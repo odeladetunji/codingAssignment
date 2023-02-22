@@ -11,6 +11,7 @@ import (
 type CustomerRepository interface {
 	CreateCustomer(customer Entity.Customers) error
 	GetAllCustomers() ([]Entity.Customers, error) 
+	GetCustomerByCustomerId(customerId int) (Entity.Customers, error)
 	CreateCustomerList(customerList []Entity.Customers) error
 	DBconnection() (*gorm.DB)
 }
@@ -57,6 +58,21 @@ func (acct *CustomerRepo) GetAllCustomers() ([]Entity.Customers, error) {
 	return customerList, nil;
 
 }
+
+func (acct *CustomerRepo) GetCustomerByCustomerId(customerId int) (Entity.Customers, error) {
+	var database *gorm.DB = dbs.ConnectToDb();
+	var customer Entity.Customers; 
+	dbError := database.Model(&Entity.Customers{}).Where(&Entity.Customers{CustomerId: customerId}).Find(&customer).Error;
+	if dbError != nil {
+		return Entity.Customers{}, errors.New(dbError.Error());
+	}
+
+	return customer, nil;
+}
+
+
+
+
 
 
 

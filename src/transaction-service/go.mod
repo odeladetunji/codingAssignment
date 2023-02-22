@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6
 	github.com/gin-gonic/gin v1.8.2
+	services.com/entity v0.0.0-00010101000000-000000000000
 	services.com/repository v0.0.0-00010101000000-000000000000
 )
 
@@ -34,7 +35,6 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gorm.io/driver/postgres v1.4.8 // indirect
 	gorm.io/gorm v1.24.5 // indirect
-	services.com/entity v0.0.0-00010101000000-000000000000 // indirect
 	services.com/migration v0.0.0-00010101000000-000000000000 // indirect
 )
 
@@ -43,3 +43,5 @@ replace services.com/repository => ../repository
 replace services.com/migration => ../migration
 
 replace services.com/entity => ../entity
+
+replace services.com/dto => ../dto
