@@ -41,6 +41,19 @@ func (acct *AccountService) CreateAccount(c *gin.Context) error {
 		return errors.New(err.Error());
 	}
 
+	if payload.CustomerId == 0 {
+		return errors.New("CustomerId is required")
+	}
+
+	acctn, errActn := accountRepo.GetAccountByCustomerId(payload.CustomerId);
+	if errActn != nil {
+		return errors.New(errActn.Error())
+	}
+
+	if acctn.Id != 0 {
+		return errors.New("Customer already created a Current Account")
+	}
+
 	var account Entity.Account;
 	account.CustomerId = payload.CustomerId;
 	account.Type = "CURRENT ACCOUNT";

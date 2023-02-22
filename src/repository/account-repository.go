@@ -10,7 +10,8 @@ import (
 
 type AccountRepository interface {
 	CreateAccount(account Entity.Account, tx *gorm.DB) (error) 
-	DBconnection() (*gorm.DB)
+	DBconnection() *gorm.DB
+	GetAccountByCustomerId(customerId int) (Entity.Account, error)
 }
 
 type AccountRepo struct {
@@ -31,7 +32,16 @@ func (acctR *AccountRepo) CreateAccount(account Entity.Account, tx *gorm.DB) (er
 	return nil;
 }
 
+func (acctR *AccountRepo) GetAccountByCustomerId(customerId int) (Entity.Account, error) {
+	var database *gorm.DB = dbsi.ConnectToDb();
+	var account Entity.Account;
+	dbError := database.Model(&Entity.Account{}).Where(&Entity.Account{CustomerId: customerId}).Find(&account).Error;
+	if dbError != nil {
+		return Entity.Account{}, errors.New(dbError.Error());
+	}
 
+	return account, nil;
+}
 
 
 
